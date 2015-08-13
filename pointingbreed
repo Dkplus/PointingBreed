@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 use PointingBreed\Console\CheckCodeSnifferResultCommand;
+use PointingBreed\Listener;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 $autoloadFiles = [__DIR__ . '/vendor/autoload.php', __DIR__ . '/../../autoload.php'];
 $autoloaded    = false;
 foreach ($autoloadFiles as $autoloadFile) {
@@ -14,6 +18,15 @@ foreach ($autoloadFiles as $autoloadFile) {
 if (! $autoloaded) {
     throw new \RuntimeException('An autoloader could not be detected: did you install this package via composer?');
 }
+
+$events = new EventDispatcher();
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabUrlListener());
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiUrlListener());
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectCommitsListener());
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabProjectIdListener());
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiProjectIdListener());
+
 $cli = new Application('pointingbreed');
+$cli->setDispatcher($events);
 $cli->add(new CheckCodeSnifferResultCommand());
 $cli->run();
