@@ -2,6 +2,7 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\CommitOption;
 use PointingBreed\GlobalOptions;
 use PointingBreed\Listener\AutodetectCommitsListener;
 use Prophecy\Argument;
@@ -45,8 +46,8 @@ class AutodetectCommitsListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REF=' . $sha);
-        $input->hasOption(GlobalOptions::COMMIT_SHA)->willReturn(false);
-        $input->setOption(GlobalOptions::COMMIT_SHA, $sha)->shouldBeCalled();
+        $input->hasOption(CommitOption::NAME)->willReturn(false);
+        $input->setOption(CommitOption::NAME, $sha)->shouldBeCalled();
 
         $listener = new AutodetectCommitsListener();
         $listener($event);
@@ -60,7 +61,7 @@ class AutodetectCommitsListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REF=ab6a30e08f5932f04f16a1c5be564118a66b730e');
-        $input->hasOption(GlobalOptions::COMMIT_SHA)->willReturn(true);
+        $input->hasOption(CommitOption::NAME)->willReturn(true);
         $input->setOption(Argument::any(), Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectCommitsListener();
