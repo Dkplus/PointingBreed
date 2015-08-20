@@ -3,5 +3,11 @@ namespace PointingBreed\Git;
 
 interface Git
 {
-    public function diff($pathToRepository, $shaFrom, $shaTo);
+    /**
+     * @param string $pathToRepository
+     * @param CommitReference $shaFrom
+     * @param CommitReference $shaTo
+     * @return Diff
+     */
+    public function diff($pathToRepository, CommitReference $shaFrom, CommitReference $shaTo);
 }

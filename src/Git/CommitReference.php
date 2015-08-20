@@ -16,9 +16,7 @@ class CommitReference
      */
     public static function fromNative($sha)
     {
-        if (! preg_match('/^[a-f0-9]{6}$/', $sha)
-            && ! preg_match('/^[a-f0-9]{40}$/', $sha)
-        ) {
+        if (! preg_match('/^[a-f0-9]{4,40}$/', $sha)) {
             throw new InvalidArgumentException(sprintf('“%s” seems to be no valid git commit reference', $sha));
         }
 

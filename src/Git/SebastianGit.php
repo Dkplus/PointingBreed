@@ -8,9 +8,15 @@ use SebastianBergmann\Git\Git as GitBySebastian;
 /**
  * Implementation of Git using sebastian/git and sebastian/diff.
  */
-class SebastianGit implements Git
+final class SebastianGit implements Git
 {
-    public function diff($pathToRepository, $shaFrom, $shaTo)
+    /**
+     * @param string $pathToRepository
+     * @param CommitReference $shaFrom
+     * @param CommitReference $shaTo
+     * @return Diff
+     */
+    public function diff($pathToRepository, CommitReference $shaFrom, CommitReference $shaTo)
     {
         $git  = new GitBySebastian($pathToRepository);
         $diff = (new Parser())->parse(
@@ -39,6 +45,6 @@ class SebastianGit implements Git
             }
             $changedLines[$file] = array_unique($changedLines[$file]);
         }
-
+        return new Diff($changedLines);
     }
 }

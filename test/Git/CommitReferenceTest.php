@@ -10,9 +10,29 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class CommitReferenceTest extends TestCase
 {
-    public function testItShouldAllowShortRefs()
+    /**
+     * @dataProvider provideShortRefs
+     *
+     * @param string $ref
+     * @return void
+     */
+    public function testItShouldAllowShortRefs($ref)
     {
-        $this->assertInstanceOf(CommitReference::class, CommitReference::fromNative('1a410e'));
+        $this->assertInstanceOf(CommitReference::class, CommitReference::fromNative($ref));
+    }
+
+    public static function provideShortRefs()
+    {
+        return [
+            ['2a41'],
+            ['2a410efb'],
+            ['2a410efbd135'],
+            ['2a410efbd1359'],
+            ['2a410efbd13591db0749'],
+            ['2a410efbd13591db074966'],
+            ['2a410efbd13591db07496601ebc'],
+            ['2a410efbd13591db07496601ebc7a059dd55cfe'],
+        ];
     }
 
     public function testItShouldAllowLongRefs()
@@ -38,8 +58,9 @@ class CommitReferenceTest extends TestCase
     public static function provideInvalidFormats()
     {
         return [
-            ['1a410'],
-            ['1a410efbd13591db07496601ebc7a059dd55cfe'],
+            ['1a0'],
+            ['1g410'],
+            ['2a410efbd13591db07496601ebc7a059dd55cfe9g'],
             ['1a410efbd13591db07496601ebc7a059dd55cf9g']
         ];
     }
