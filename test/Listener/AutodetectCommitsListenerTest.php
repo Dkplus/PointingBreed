@@ -2,8 +2,8 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\CommitBeforeOption;
 use PointingBreed\Console\CommitOption;
-use PointingBreed\GlobalOptions;
 use PointingBreed\Listener\AutodetectCommitsListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -77,8 +77,8 @@ class AutodetectCommitsListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_BEFORE_SHA=' . $sha);
-        $input->hasOption(GlobalOptions::COMMIT_SHA_BEFORE)->willReturn(false);
-        $input->setOption(GlobalOptions::COMMIT_SHA_BEFORE, $sha)->shouldBeCalled();
+        $input->hasOption(CommitBeforeOption::NAME)->willReturn(false);
+        $input->setOption(CommitBeforeOption::NAME, $sha)->shouldBeCalled();
 
         $listener = new AutodetectCommitsListener();
         $listener($event);
@@ -92,7 +92,7 @@ class AutodetectCommitsListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_BEFORE_SHA=ab6a30e08f5932f04f16a1c5be564118a66b730e');
-        $input->hasOption(GlobalOptions::COMMIT_SHA_BEFORE)->willReturn(true);
+        $input->hasOption(CommitBeforeOption::NAME)->willReturn(true);
         $input->setOption(Argument::any(), Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectCommitsListener();
