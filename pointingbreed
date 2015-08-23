@@ -1,7 +1,12 @@
 #!/usr/bin/env php
 <?php
-use PointingBreed\Console\CheckCodeSnifferResultCommand;
+
+use PointingBreed\Console;
+use PointingBreed\Git;
+use PointingBreed\Gitlab;
 use PointingBreed\Listener;
+use PointingBreed\Reporting;
+use PointingBreed\ReportGenerator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -20,13 +25,28 @@ if (! $autoloaded) {
 }
 
 $events = new EventDispatcher();
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabUrlListener());
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiUrlListener());
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabHostListener());
+$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiHostListener());
 $events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectCommitsListener());
 $events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabProjectIdListener());
 $events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiProjectIdListener());
 
+$git       = new Git\SebastianGit();
+$reporters = new Gitlab\GitlabReporterFactory(new Reporting\DefaultFormatFactory(new Reporting\EmojiFormat()));
+$reporters = new Reporting\UnknownReportsFilterFactory($git, $reporters);
+
 $cli = new Application('pointingbreed');
+$cli->getDefinition()->addOptions([
+    new Console\CommitOption(),
+    new Console\CommitBeforeOption(),
+    new Console\GitlabHostOption(),
+    new Console\GitlabCiHostOption(),
+    new Console\GitlabPrivateTokenOption(),
+    new Console\GitlabProjectIdOption(),
+    new Console\GitlabCiProjectIdOption(),
+    new Console\FilterOption(),
+]);
 $cli->setDispatcher($events);
-$cli->add(new CheckCodeSnifferResultCommand());
+$cli->add(new Console\ReportCheckstyleCommand(new ReportGenerator\ReportFromCheckstyleGenerator(getcwd()), $reporters));
+$cli->add(new Console\ReportFinalizerCommand(new ReportGenerator\ReportFromFinalizerGenerator(getcwd()), $reporters));
 $cli->run();

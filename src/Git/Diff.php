@@ -22,9 +22,18 @@ class Diff
      * @param int    $line
      * @return boolean
      */
-    public function contains($filePath, $line)
+    public function containsLine($filePath, $line)
     {
         return isset($this->changes[$filePath])
-        && in_array((int) $line, $this->changes[$filePath], true);
+            && in_array((int) $line, $this->changes[$filePath], true);
+    }
+
+    /**
+     * @param string $filePath
+     * @return bool
+     */
+    public function containsFile($filePath)
+    {
+        return isset($this->changes[$filePath]);
     }
 }

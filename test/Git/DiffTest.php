@@ -12,12 +12,18 @@ class DiffTest extends TestCase
     public function testItShouldKnowWhenALineHasChanged()
     {
         $underTest = new Diff(['src/Git/Diff.php' => [1, 2, 3]]);
-        $this->assertTrue($underTest->contains('src/Git/Diff.php', 1));
+        $this->assertTrue($underTest->containsLine('src/Git/Diff.php', 1));
+    }
+
+    public function testItShouldKnowWhenAnyLineInAFileHasChanged()
+    {
+        $underTest = new Diff(['src/Git/Diff.php' => [1, 2, 3]]);
+        $this->assertTrue($underTest->containsFile('src/Git/Diff.php'));
     }
 
     public function testItShouldAssumeThatLinesAreUnchangedWhenNoInformationAreAvailable()
     {
         $underTest = new Diff([]);
-        $this->assertFalse($underTest->contains('src/Git/Diff.php', 1));
+        $this->assertFalse($underTest->containsLine('src/Git/Diff.php', 1));
     }
 }

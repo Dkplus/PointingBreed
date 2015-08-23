@@ -3,7 +3,7 @@ namespace PointingBreed\Console;
 
 use Symfony\Component\Console\Input\InputOption;
 
-final class GitlabProjectIdOption extends InputOption
+class GitlabProjectIdOption extends InputOption
 {
     const NAME = 'gitlab-project-id';
 

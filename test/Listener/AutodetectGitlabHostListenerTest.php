@@ -2,8 +2,9 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\GitlabHostOption;
 use PointingBreed\GlobalOptions;
-use PointingBreed\Listener\AutodetectGitlabUrlListener;
+use PointingBreed\Listener\AutodetectGitlabHostListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Command\Command;
@@ -12,9 +13,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @covers PointingBreed\Listener\AutodetectGitlabUrlListener
+ * @covers PointingBreed\Listener\AutodetectGitlabHostListener
  */
-class AutodetectGitlabUrlListenerTest extends TestCase
+class AutodetectGitlabHostListenerTest extends TestCase
 {
     /** @var string */
     private $backedRepoEnv;
@@ -45,10 +46,10 @@ class AutodetectGitlabUrlListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REPO=' . $repositoryUrl);
-        $input->hasOption(GlobalOptions::GITLAB_URL)->willReturn(false);
-        $input->setOption(GlobalOptions::GITLAB_URL, $expectedApiUrl)->shouldBeCalled();
+        $input->hasOption(GitlabHostOption::NAME)->willReturn(false);
+        $input->setOption(GitlabHostOption::NAME, $expectedApiUrl)->shouldBeCalled();
 
-        $listener = new AutodetectGitlabUrlListener();
+        $listener = new AutodetectGitlabHostListener();
         $listener($event);
     }
 
@@ -74,10 +75,10 @@ class AutodetectGitlabUrlListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REPO=https://gitlab-ci-token:068c84957409ba00e4a52315e6ccf6@gitlab.foo.net/foo/bar.git');
-        $input->hasOption(GlobalOptions::GITLAB_URL)->willReturn(true);
-        $input->setOption(GlobalOptions::GITLAB_URL, Argument::any())->shouldNotBeCalled();
+        $input->hasOption(GitlabHostOption::NAME)->willReturn(true);
+        $input->setOption(GitlabHostOption::NAME, Argument::any())->shouldNotBeCalled();
 
-        $listener = new AutodetectGitlabUrlListener();
+        $listener = new AutodetectGitlabHostListener();
         $listener($event);
     }
 
@@ -95,10 +96,10 @@ class AutodetectGitlabUrlListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REPO=' . $invalidUrl);
-        $input->hasOption(GlobalOptions::GITLAB_URL)->willReturn(false);
+        $input->hasOption(GitlabHostOption::NAME)->willReturn(false);
         $input->setOption()->shouldNotBeCalled();
 
-        $listener = new AutodetectGitlabUrlListener();
+        $listener = new AutodetectGitlabHostListener();
         $listener($event);
     }
 

@@ -1,2 +1,4 @@
 composer.lock
 vendor
+test/ReportGenerator/assets/tmp
+!test/ReportGenerator/assets/tmp/.gitkeep

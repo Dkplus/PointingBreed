@@ -3,7 +3,7 @@ namespace PointingBreed\Console;
 
 use Symfony\Component\Console\Input\InputOption;
 
-final class GitlabPrivateTokenOption extends InputOption
+class GitlabPrivateTokenOption extends InputOption
 {
     const NAME = 'gitlab-private-token';
 

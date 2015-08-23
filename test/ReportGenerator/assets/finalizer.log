@@ -1,0 +1,8 @@
+Following classes need to be made final:
++----------------------------------------------+
+| PointingBreed\Reporting\DefaultFormatFactory |
++----------------------------------------------+
+Following classes are final and need to be made extensible again:
++--------------------------------------------------+
+| PointingBreed\Reporting\NoReporterFoundException |
++--------------------------------------------------+

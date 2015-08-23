@@ -2,9 +2,8 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use PointingBreed\GlobalOptions;
+use PointingBreed\Console\GitlabProjectIdOption;
 use PointingBreed\Listener\AutodetectGitlabProjectIdListener;
-use PointingBreed\Listener\AutodetectGitlabUrlListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Command\Command;
@@ -46,8 +45,8 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REPO=' . $repositoryUrl);
-        $input->hasOption(GlobalOptions::GITLAB_PROJECT_ID)->willReturn(false);
-        $input->setOption(GlobalOptions::GITLAB_PROJECT_ID, $expectedProjectId)->shouldBeCalled();
+        $input->hasOption(GitlabProjectIdOption::NAME)->willReturn(false);
+        $input->setOption(GitlabProjectIdOption::NAME, $expectedProjectId)->shouldBeCalled();
 
         $listener = new AutodetectGitlabProjectIdListener();
         $listener($event);
@@ -75,8 +74,8 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REPO=https://gitlab-ci-token:068c84957409ba00e4a52315e6ccf6@gitlab.foo.net/foo/bar.git');
-        $input->hasOption(GlobalOptions::GITLAB_PROJECT_ID)->willReturn(true);
-        $input->setOption(GlobalOptions::GITLAB_PROJECT_ID, Argument::any())->shouldNotBeCalled();
+        $input->hasOption(GitlabProjectIdOption::NAME)->willReturn(true);
+        $input->setOption(GitlabProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabProjectIdListener();
         $listener($event);
@@ -96,7 +95,7 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_BUILD_REPO=' . $invalidUrl);
-        $input->hasOption(GlobalOptions::GITLAB_PROJECT_ID)->willReturn(false);
+        $input->hasOption(GitlabProjectIdOption::NAME)->willReturn(false);
         $input->setOption()->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabProjectIdListener();

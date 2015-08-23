@@ -2,9 +2,8 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use PointingBreed\GlobalOptions;
+use PointingBreed\Console\GitlabCiProjectIdOption;
 use PointingBreed\Listener\AutodetectGitlabCiProjectIdListener;
-use PointingBreed\Listener\AutodetectGitlabCiUrlListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Command\Command;
@@ -40,8 +39,8 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_PROJECT_ID=' . $id);
-        $input->hasOption(GlobalOptions::GITLAB_CI_PROJECT_ID)->willReturn(false);
-        $input->setOption(GlobalOptions::GITLAB_CI_PROJECT_ID, $id)->shouldBeCalled();
+        $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(false);
+        $input->setOption(GitlabCiProjectIdOption::NAME, $id)->shouldBeCalled();
 
         $listener = new AutodetectGitlabCiProjectIdListener();
         $listener($event);
@@ -54,8 +53,8 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $output  = $this->anOutput();
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
-        $input->hasOption(GlobalOptions::GITLAB_CI_PROJECT_ID)->willReturn(false);
-        $input->setOption(GlobalOptions::GITLAB_CI_PROJECT_ID, Argument::any())->shouldNotBeCalled();
+        $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(false);
+        $input->setOption(GitlabCiProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabCiProjectIdListener();
         $listener($event);
@@ -69,8 +68,8 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
 
         putenv('CI_PROJECT_ID=5');
-        $input->hasOption(GlobalOptions::GITLAB_CI_PROJECT_ID)->willReturn(true);
-        $input->setOption(GlobalOptions::GITLAB_CI_PROJECT_ID, Argument::any())->shouldNotBeCalled();
+        $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(true);
+        $input->setOption(GitlabCiProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabCiProjectIdListener();
         $listener($event);

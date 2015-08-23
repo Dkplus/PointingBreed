@@ -3,7 +3,7 @@ namespace PointingBreed\Console;
 
 use Symfony\Component\Console\Input\InputOption;
 
-final class CommitOption extends InputOption
+class CommitOption extends InputOption
 {
     const NAME = 'commit';
 

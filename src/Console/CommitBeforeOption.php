@@ -3,7 +3,7 @@ namespace PointingBreed\Console;
 
 use Symfony\Component\Console\Input\InputOption;
 
-final class CommitBeforeOption extends InputOption
+class CommitBeforeOption extends InputOption
 {
     const NAME = 'commit-before';
 

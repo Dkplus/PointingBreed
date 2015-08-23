@@ -1,7 +1,7 @@
 <?php
 namespace PointingBreed\Listener;
 
-use PointingBreed\GlobalOptions;
+use PointingBreed\Console\GitlabProjectIdOption;
 use Symfony\Component\Console\Event\ConsoleEvent;
 
 /**
@@ -11,7 +11,7 @@ final class AutodetectGitlabProjectIdListener
 {
     public function __invoke(ConsoleEvent $event)
     {
-        if ($event->getInput()->hasOption(GlobalOptions::GITLAB_PROJECT_ID)) {
+        if ($event->getInput()->hasOption(GitlabProjectIdOption::NAME)) {
             return;
         }
         if (! getenv('CI_BUILD_REPO')) {
@@ -28,6 +28,6 @@ final class AutodetectGitlabProjectIdListener
 
         $namespace = $matches[1];
         $project   = $matches[2];
-        $event->getInput()->setOption(GlobalOptions::GITLAB_PROJECT_ID, $namespace . '%2F' . $project);
+        $event->getInput()->setOption(GitlabProjectIdOption::NAME, $namespace . '%2F' . $project);
     }
 }

@@ -29,7 +29,7 @@ class SebastianGitTest extends TestCase
             CommitReference::fromNative(self::SECOND_COMMIT_TO_THIS_REPOSITORY)
         );
 
-        $this->assertTrue($diff->contains($file, $line));
+        $this->assertTrue($diff->containsLine($file, $line));
     }
 
     public static function provideChangedLines()
@@ -56,7 +56,7 @@ class SebastianGitTest extends TestCase
             CommitReference::fromNative(self::SECOND_COMMIT_TO_THIS_REPOSITORY)
         );
 
-        $this->assertFalse($diff->contains($file, $line));
+        $this->assertFalse($diff->containsLine($file, $line));
     }
 
     public static function provideUnchangedLines()

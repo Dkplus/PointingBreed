@@ -1,17 +1,17 @@
 <?php
 namespace PointingBreed\Listener;
 
-use PointingBreed\GlobalOptions;
+use PointingBreed\Console\GitlabHostOption;
 use Symfony\Component\Console\Event\ConsoleEvent;
 
 /**
- * Autodetect the gitlab-url from CI_BUILD_REPO environment variable.
+ * Autodetect the gitlab-host from CI_BUILD_REPO environment variable.
  */
-final class AutodetectGitlabUrlListener
+final class AutodetectGitlabHostListener
 {
     public function __invoke(ConsoleEvent $event)
     {
-        if ($event->getInput()->hasOption(GlobalOptions::GITLAB_URL)) {
+        if ($event->getInput()->hasOption(GitlabHostOption::NAME)) {
             return;
         }
         if (! getenv('CI_BUILD_REPO')) {
@@ -28,6 +28,6 @@ final class AutodetectGitlabUrlListener
 
         $pathWithoutRepo = $matches[1];
         $url = $urlParts['scheme'] . '://' . $urlParts['host'] . $pathWithoutRepo . '/api/v3/';
-        $event->getInput()->setOption(GlobalOptions::GITLAB_URL, $url);
+        $event->getInput()->setOption(GitlabHostOption::NAME, $url);
     }
 }
