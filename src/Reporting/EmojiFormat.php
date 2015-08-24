@@ -12,38 +12,33 @@ final class EmojiFormat implements Format
         $result   = $report->toText();
         $severity = $report->toSeverity();
 
-        if ($severity->isGettingBetter()) {
-            $result .= ' :+1:';
+        $suffixes = [
+            ' :+1:' => $severity->isGettingBetter(),
+            ' :-1:' => $severity->isGettingWorse(),
+        ];
+        $prefixes = [
+            ':speech_balloon: '                => $severity->isNotice(),
+            ':white_up_pointing_index: '       => $severity->isWarning(),
+            ':high_voltage_sign: '             => $severity->isError(),
+            ':puke_finger: '                   => $severity->toProgress() === 0,
+            ':face_with_no_good_gesture: '     => $severity->toProgress() === 1,
+            ':person_with_pouting_face: '      => $severity->toProgress() === 2,
+            ':person_frowning: '               => $severity->toProgress() === 3,
+            ':face_with_ok_gesture: '          => $severity->toProgress() === 4,
+            ':happy_person_raising_one_hand: ' => $severity->toProgress() === 5,
+        ];
+
+        foreach ($suffixes as $eachEmoji => $apply) {
+            if ($apply) {
+                $result .= $eachEmoji;
+                break;
+            }
         }
-        if ($severity->isGettingWorse()) {
-            $result .= ' :-1:';
-        }
-        if ($severity->isNotice()) {
-            $result = ':speech_balloon: ' . $result;
-        }
-        if ($severity->isWarning()) {
-            $result = ':white_up_pointing_index: ' . $result;
-        }
-        if ($severity->isError()) {
-            $result = ':high_voltage_sign: ' . $result;
-        }
-        if ($severity->toProgress() === 0) {
-            $result = ':puke_finger: ' . $result;
-        }
-        if ($severity->toProgress() === 1) {
-            $result = ':face_with_no_good_gesture: ' . $result;
-        }
-        if ($severity->toProgress() === 2) {
-            $result = ':person_with_pouting_face: ' . $result;
-        }
-        if ($severity->toProgress() === 3) {
-            $result = ':person_frowning: ' . $result;
-        }
-        if ($severity->toProgress() === 4) {
-            $result = ':face_with_ok_gesture: ' . $result;
-        }
-        if ($severity->toProgress() === 5) {
-            $result = ':happy_person_raising_one_hand: ' . $result;
+        foreach ($prefixes as $eachEmoji => $apply) {
+            if ($apply) {
+                $result = $eachEmoji . $result;
+                break;
+            }
         }
 
         return $result;
