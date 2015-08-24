@@ -1,7 +1,6 @@
 <?php
 namespace PointingBreed\Console;
 
-use PointingBreed\ReportGenerator\ReportFromCheckstyleGenerator;
 use PointingBreed\ReportGenerator\ReportFromFinalizerGenerator;
 use PointingBreed\Reporting\ReporterFactory;
 use PointingBreed\Reporting\Severity;

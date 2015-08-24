@@ -7,7 +7,6 @@ use PointingBreed\Console\GitlabHostOption;
 use PointingBreed\Console\GitlabPrivateTokenOption;
 use PointingBreed\Console\GitlabProjectIdOption;
 use PointingBreed\Git\CommitReference;
-use PointingBreed\Reporting\EmojiFormat;
 use PointingBreed\Reporting\FormatFactory;
 use PointingBreed\Reporting\NoReporterFoundException;
 use PointingBreed\Reporting\Reporter;

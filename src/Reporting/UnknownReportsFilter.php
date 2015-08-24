@@ -41,10 +41,10 @@ final class UnknownReportsFilter implements Reporter
         );
 
         $reports = array_filter($reports, function (Report $report) use ($diff) {
-            if (! $report->toFile()) {
+            if ($report->toFile() === null) {
                 return true;
             }
-            if (! $report->toChangedLine()) {
+            if ($report->toChangedLine() === null) {
                 return $diff->containsFile($report->toFile());
             }
             return $diff->containsLine($report->toFile(), $report->toChangedLine());
