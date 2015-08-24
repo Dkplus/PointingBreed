@@ -37,7 +37,7 @@ class ReportFromCheckstyleGenerator
                 $result[] = Report::forLine(
                     (string) $violation['message'],
                     $eachSeverity,
-                    substr($file['name'], (string) strlen($this->repositoryBaseDir . '/')),
+                    substr(strval($file['name']), strlen($this->repositoryBaseDir . '/')),
                     (int) $violation['line']
                 );
             }

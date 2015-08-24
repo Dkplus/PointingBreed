@@ -38,7 +38,7 @@ class ReportFromCheckstyleGeneratorTest extends TestCase
      */
     private function provideCheckstyleFile()
     {
-        $baseDir = realpath(__DIR__ . '/../../..');
+        $baseDir = realpath(__DIR__ . '/../..');
         $result  = __DIR__ . '/assets/tmp/checkstyle.xml';
 
         copy(__DIR__ . '/assets/checkstyle.xml', $result);

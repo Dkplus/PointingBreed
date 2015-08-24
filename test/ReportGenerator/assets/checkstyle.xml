@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="2.3.3">
- <file name="/home/oskar/PhpstormProjects/PointingBreed/src/Console/CommitOption.php">
+ <file name="/path/to/project/src/Console/CommitOption.php">
   <error line="7" column="4" severity="warning" message="Line exceeds 120 characters; contains 127 characters" source="Generic.Files.LineLength.TooLong"/>
   <error line="13" column="35" severity="error" message="Opening brace should be on a new line" source="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
   <error line="16" column="1" severity="error" message="Expected 1 newline at end of file; 0 found" source="PSR2.Files.EndFileNewline.NoneFound"/>
