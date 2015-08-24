@@ -1,9 +1,9 @@
 <?php
 namespace PointingBreed\Listener;
 
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\CommitBeforeOption;
 use PointingBreed\Console\CommitOption;
-use Symfony\Component\Console\Event\ConsoleEvent;
 
 /**
  * Autodetects commit sha from the environment.
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Event\ConsoleEvent;
  */
 final class AutodetectCommitsListener
 {
-    public function __invoke(ConsoleEvent $event)
+    public function __invoke(AutodetectInputEvent $event)
     {
         if (getenv('CI_BUILD_REF') && ! $event->getInput()->hasOption(CommitOption::NAME)) {
             $event->getInput()->setOption(CommitOption::NAME, getenv('CI_BUILD_REF'));

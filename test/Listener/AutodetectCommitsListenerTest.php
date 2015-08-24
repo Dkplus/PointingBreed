@@ -2,15 +2,13 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\CommitBeforeOption;
 use PointingBreed\Console\CommitOption;
 use PointingBreed\Listener\AutodetectCommitsListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers PointingBreed\Listener\AutodetectCommitsListener
@@ -39,11 +37,9 @@ class AutodetectCommitsListenerTest extends TestCase
 
     public function testItShouldGrabTheCurrentCommitShaFromTheEnvironmentAndPutItIntoTheInput()
     {
-        $sha     = 'ab6a30e08f5932f04f16a1c5be564118a66b730e';
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $sha   = 'ab6a30e08f5932f04f16a1c5be564118a66b730e';
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REF=' . $sha);
         $input->hasOption(CommitOption::NAME)->willReturn(false);
@@ -55,10 +51,8 @@ class AutodetectCommitsListenerTest extends TestCase
 
     public function testItShouldNotGrabTheCurrentCommitShaFromTheEnvironmentWhenItsAlreadyWithinTheInput()
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REF=ab6a30e08f5932f04f16a1c5be564118a66b730e');
         $input->hasOption(CommitOption::NAME)->willReturn(true);
@@ -70,11 +64,9 @@ class AutodetectCommitsListenerTest extends TestCase
 
     public function testItShouldGrabTheCurrentCommitShaBeforeFromTheEnvironmentAndPutItIntoTheInput()
     {
-        $sha     = 'ab6a30e08f5932f04f16a1c5be564118a66b730e';
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $sha   = 'ab6a30e08f5932f04f16a1c5be564118a66b730e';
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_BEFORE_SHA=' . $sha);
         $input->hasOption(CommitBeforeOption::NAME)->willReturn(false);
@@ -86,10 +78,8 @@ class AutodetectCommitsListenerTest extends TestCase
 
     public function testItShouldNotGrabTheCurrentCommitShaBeforeFromTheEnvironmentWhenItsAlreadyWithinTheInput()
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_BEFORE_SHA=ab6a30e08f5932f04f16a1c5be564118a66b730e');
         $input->hasOption(CommitBeforeOption::NAME)->willReturn(true);
@@ -99,21 +89,9 @@ class AutodetectCommitsListenerTest extends TestCase
         $listener($event);
     }
 
-    /** @return Command|ObjectProphecy */
-    private function aCommand()
-    {
-        return $this->prophesize(Command::class);
-    }
-
     /** @return InputInterface|ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);
-    }
-
-    /** @return OutputInterface|ObjectProphecy */
-    private function anOutput()
-    {
-        return $this->prophesize(OutputInterface::class);
     }
 }

@@ -2,14 +2,12 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabCiProjectIdOption;
 use PointingBreed\Listener\AutodetectGitlabCiProjectIdListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers PointingBreed\Listener\AutodetectGitlabCiProjectIdListener
@@ -32,11 +30,9 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
 
     public function testItShouldExtractTheIdFromTheEnvironment()
     {
-        $id      = 5;
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $id    = 5;
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_PROJECT_ID=' . $id);
         $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(false);
@@ -48,10 +44,8 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
 
     public function testItShouldNotDoAnythingWhenTheIdHasNotBeenSetAlreadyAndItsNotWithinTheEnvironment()
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(false);
         $input->setOption(GitlabCiProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
@@ -62,10 +56,8 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
 
     public function testItShouldNotDoAnythingWhenTheIdHasBeenSetAlready()
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_PROJECT_ID=5');
         $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(true);
@@ -75,21 +67,9 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $listener($event);
     }
 
-    /** @return Command|ObjectProphecy */
-    private function aCommand()
-    {
-        return $this->prophesize(Command::class);
-    }
-
     /** @return InputInterface|ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);
-    }
-
-    /** @return OutputInterface|ObjectProphecy */
-    private function anOutput()
-    {
-        return $this->prophesize(OutputInterface::class);
     }
 }

@@ -1,15 +1,15 @@
 <?php
 namespace PointingBreed\Listener;
 
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabCiProjectIdOption;
-use Symfony\Component\Console\Event\ConsoleEvent;
 
 /**
  * Autodetect the gitlab ci project id from CI_PROJECT_ID environment variable.
  */
 final class AutodetectGitlabCiProjectIdListener
 {
-    public function __invoke(ConsoleEvent $event)
+    public function __invoke(AutodetectInputEvent $event)
     {
         if ($event->getInput()->hasOption(GitlabCiProjectIdOption::NAME)) {
             return;

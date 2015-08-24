@@ -1,15 +1,15 @@
 <?php
 namespace PointingBreed\Listener;
 
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabHostOption;
-use Symfony\Component\Console\Event\ConsoleEvent;
 
 /**
  * Autodetect the gitlab-host from CI_BUILD_REPO environment variable.
  */
 final class AutodetectGitlabHostListener
 {
-    public function __invoke(ConsoleEvent $event)
+    public function __invoke(AutodetectInputEvent $event)
     {
         if ($event->getInput()->hasOption(GitlabHostOption::NAME)) {
             return;

@@ -2,13 +2,16 @@
 namespace PointingBreedTest\Console;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\ReportCheckstyleCommand;
 use PointingBreed\ReportGenerator\ReportFromCheckstyleGenerator;
 use PointingBreed\Reporting\Report;
 use PointingBreed\Reporting\Reporter;
 use PointingBreed\Reporting\ReporterFactory;
+use Prophecy\Argument;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers PointingBreed\Console\ReportCheckstyleCommand
@@ -22,17 +25,41 @@ class ReportCheckstyleCommandTest extends TestCase
         $reportGenerator = $this->aReportGeneratorForFile('checkstyle.xml', $reports);
         $reporter        = $this->aReporter();
         $reporters       = $this->aReportFactoryThatGenerates($reporter->reveal(), $options);
+        $events          = $this->anEventDispatcher();
 
-        $underTest = new ReportCheckstyleCommand($reportGenerator->reveal(), $reporters->reveal());
+        $underTest = new ReportCheckstyleCommand($events->reveal(), $reportGenerator->reveal(), $reporters->reveal());
         $underTest->addOption('foo'); // we need an option to assure that the right input has been used
         $underTest->run($this->anInputWithOptions('checkstyle.xml', $options), $this->anOutput());
 
         $reporter->report($reports)->shouldHaveBeenCalled();
     }
 
+    public function testItShouldAllowAutomaticCollectionOfOptions()
+    {
+        $options         = ['foo' => 'bar'];
+        $reports         = [$this->aReport()->reveal()];
+        $reportGenerator = $this->aReportGeneratorForFile('checkstyle.xml', $reports);
+        $reporter        = $this->aReporter();
+        $reporters       = $this->aReportFactoryThatGenerates($reporter->reveal(), $options);
+        $events          = $this->anEventDispatcher();
+
+        $underTest = new ReportCheckstyleCommand($events->reveal(), $reportGenerator->reveal(), $reporters->reveal());
+        $underTest->addOption('foo'); // we need an option to assure that the right input has been used
+        $underTest->run($this->anInputWithOptions('checkstyle.xml', $options), $this->anOutput());
+
+        $events
+            ->dispatch(AutodetectInputEvent::NAME, Argument::type(AutodetectInputEvent::class))
+            ->shouldHaveBeenCalled();
+    }
+
     private function aReport()
     {
         return $this->prophesize(Report::class);
+    }
+
+    private function anEventDispatcher()
+    {
+        return $this->prophesize(EventDispatcherInterface::class);
     }
 
     private function aReportGeneratorForFile($file, array $reports)

@@ -25,11 +25,11 @@ if (! $autoloaded) {
 }
 
 $events = new EventDispatcher();
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabHostListener());
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiHostListener());
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectCommitsListener());
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabProjectIdListener());
-$events->addListener(ConsoleEvents::COMMAND, new Listener\AutodetectGitlabCiProjectIdListener());
+$events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabHostListener());
+$events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabCiHostListener());
+$events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectCommitsListener());
+$events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabProjectIdListener());
+$events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabCiProjectIdListener());
 
 $git       = new Git\SebastianGit();
 $reporters = new Gitlab\GitlabReporterFactory(new Reporting\DefaultFormatFactory(new Reporting\EmojiFormat()));
@@ -46,7 +46,14 @@ $cli->getDefinition()->addOptions([
     new Console\GitlabCiProjectIdOption(),
     new Console\FilterOption(),
 ]);
-$cli->setDispatcher($events);
-$cli->add(new Console\ReportCheckstyleCommand(new ReportGenerator\ReportFromCheckstyleGenerator(getcwd()), $reporters));
-$cli->add(new Console\ReportFinalizerCommand(new ReportGenerator\ReportFromFinalizerGenerator(getcwd()), $reporters));
+$cli->add(new Console\ReportCheckstyleCommand(
+    $events,
+    new ReportGenerator\ReportFromCheckstyleGenerator(getcwd()),
+    $reporters
+));
+$cli->add(new Console\ReportFinalizerCommand(
+    $events,
+    new ReportGenerator\ReportFromFinalizerGenerator(getcwd()),
+    $reporters
+));
 $cli->run();

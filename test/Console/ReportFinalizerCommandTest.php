@@ -2,6 +2,7 @@
 namespace PointingBreedTest\Console;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\ReportFinalizerCommand;
 use PointingBreed\ReportGenerator\ReportFromCheckstyleGenerator;
 use PointingBreed\ReportGenerator\ReportFromFinalizerGenerator;
@@ -9,8 +10,10 @@ use PointingBreed\Reporting\Report;
 use PointingBreed\Reporting\Reporter;
 use PointingBreed\Reporting\ReporterFactory;
 use PointingBreed\Reporting\Severity;
+use Prophecy\Argument;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers PointingBreed\Console\ReportFinalizerCommand
@@ -24,11 +27,29 @@ class ReportFinalizerCommandTest extends TestCase
         $reportGenerator = $this->aReportGeneratorForFile('finalizer.log', Severity::notice(), $reports);
         $reporter        = $this->aReporter();
         $reporters       = $this->aReportFactoryThatGenerates($reporter->reveal(), $options);
+        $events          = $this->anEventDispatcher();
 
-        $underTest = new ReportFinalizerCommand($reportGenerator->reveal(), $reporters->reveal());
+        $underTest = new ReportFinalizerCommand($events->reveal(), $reportGenerator->reveal(), $reporters->reveal());
         $underTest->run($this->anInputWithOptions('finalizer.log', $options), $this->anOutput());
 
         $reporter->report($reports)->shouldHaveBeenCalled();
+    }
+
+    public function testItShouldAutomaticallyCollectInputOptions()
+    {
+        $options         = [];
+        $reports         = [$this->aReport()->reveal()];
+        $reportGenerator = $this->aReportGeneratorForFile('finalizer.log', Severity::notice(), $reports);
+        $reporter        = $this->aReporter();
+        $reporters       = $this->aReportFactoryThatGenerates($reporter->reveal(), $options);
+        $events          = $this->anEventDispatcher();
+
+        $underTest = new ReportFinalizerCommand($events->reveal(), $reportGenerator->reveal(), $reporters->reveal());
+        $underTest->run($this->anInputWithOptions('finalizer.log', $options), $this->anOutput());
+
+        $events
+            ->dispatch(AutodetectInputEvent::NAME, Argument::type(AutodetectInputEvent::class))
+            ->shouldHaveBeenCalled();
     }
 
     /**
@@ -45,8 +66,9 @@ class ReportFinalizerCommandTest extends TestCase
         $reportGenerator = $this->aReportGeneratorForFile('finalizer.log', $severity, $reports);
         $reporter        = $this->aReporter();
         $reporters       = $this->aReportFactoryThatGenerates($reporter->reveal(), $options);
+        $events          = $this->anEventDispatcher();
 
-        $underTest = new ReportFinalizerCommand($reportGenerator->reveal(), $reporters->reveal());
+        $underTest = new ReportFinalizerCommand($events->reveal(), $reportGenerator->reveal(), $reporters->reveal());
         $underTest->run($this->anInputWithOptions('finalizer.log', $options), $this->anOutput());
 
         $reporter->report($reports)->shouldHaveBeenCalled();
@@ -64,6 +86,11 @@ class ReportFinalizerCommandTest extends TestCase
     private function aReport()
     {
         return $this->prophesize(Report::class);
+    }
+
+    private function anEventDispatcher()
+    {
+        return $this->prophesize(EventDispatcherInterface::class);
     }
 
     private function aReportGeneratorForFile($file, Severity $severity, array $reports)

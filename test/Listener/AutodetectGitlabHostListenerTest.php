@@ -2,15 +2,13 @@
 namespace PointingBreedTest\Listener;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabHostOption;
 use PointingBreed\GlobalOptions;
 use PointingBreed\Listener\AutodetectGitlabHostListener;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers PointingBreed\Listener\AutodetectGitlabHostListener
@@ -40,10 +38,8 @@ class AutodetectGitlabHostListenerTest extends TestCase
      */
     public function testItShouldExtractAValidUrlFromTheEnvironment($repositoryUrl, $expectedApiUrl)
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=' . $repositoryUrl);
         $input->hasOption(GitlabHostOption::NAME)->willReturn(false);
@@ -69,10 +65,8 @@ class AutodetectGitlabHostListenerTest extends TestCase
 
     public function testItShouldNotDoAnythingWhenTheGitlabUrlHasBeenSetAlready()
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=https://gitlab-ci-token:068c84957409ba00e4a52315e6ccf6@gitlab.foo.net/foo/bar.git');
         $input->hasOption(GitlabHostOption::NAME)->willReturn(true);
@@ -90,10 +84,8 @@ class AutodetectGitlabHostListenerTest extends TestCase
      */
     public function testItShouldFilterOutInvalidUrls($invalidUrl)
     {
-        $command = $this->aCommand();
-        $input   = $this->anInput();
-        $output  = $this->anOutput();
-        $event   = new ConsoleEvent($command->reveal(), $input->reveal(), $output->reveal());
+        $input = $this->anInput();
+        $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=' . $invalidUrl);
         $input->hasOption(GitlabHostOption::NAME)->willReturn(false);
@@ -113,21 +105,9 @@ class AutodetectGitlabHostListenerTest extends TestCase
         ];
     }
 
-    /** @return Command|ObjectProphecy */
-    private function aCommand()
-    {
-        return $this->prophesize(Command::class);
-    }
-
     /** @return InputInterface|ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);
-    }
-
-    /** @return OutputInterface|ObjectProphecy */
-    private function anOutput()
-    {
-        return $this->prophesize(OutputInterface::class);
     }
 }
