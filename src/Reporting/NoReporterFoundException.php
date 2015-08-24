@@ -3,7 +3,7 @@ namespace PointingBreed\Reporting;
 
 use InvalidArgumentException;
 
-final class NoReporterFoundException extends InvalidArgumentException
+class NoReporterFoundException extends InvalidArgumentException
 {
     public function __construct()
     {

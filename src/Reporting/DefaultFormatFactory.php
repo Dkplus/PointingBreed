@@ -1,7 +1,7 @@
 <?php
 namespace PointingBreed\Reporting;
 
-class DefaultFormatFactory implements FormatFactory
+final class DefaultFormatFactory implements FormatFactory
 {
     /** @var Format */
     private $defaultFormat;
