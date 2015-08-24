@@ -90,7 +90,7 @@ class GitlabReporterTest extends TestCase
 
     /**
      * @param ObjectProphecy $repositories
-     * @return Client|ObjectProphecy
+     * @return ObjectProphecy
      */
     private function aGitlabClientForRepositories(ObjectProphecy $repositories)
     {
@@ -99,7 +99,7 @@ class GitlabReporterTest extends TestCase
         return $client;
     }
 
-    /** @return Repositories|ObjectProphecy */
+    /** @return ObjectProphecy */
     private function aRepositories()
     {
         return $this->prophesize(Repositories::class);

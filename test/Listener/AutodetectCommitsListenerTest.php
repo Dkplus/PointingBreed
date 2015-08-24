@@ -89,7 +89,7 @@ class AutodetectCommitsListenerTest extends TestCase
         $listener($event);
     }
 
-    /** @return InputInterface|ObjectProphecy */
+    /** @return ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);

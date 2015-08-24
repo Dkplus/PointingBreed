@@ -18,8 +18,8 @@ class ReportFromCheckstyleGenerator
     }
 
     /**
-     * @param string      $pathToCheckstyleXml
-     * @param Severity $severity
+     * @param string        $pathToCheckstyleXml
+     * @param Severity|null $severity
      * @return Report[]
      */
     public function parse($pathToCheckstyleXml, Severity $severity = null)

@@ -105,7 +105,7 @@ class AutodetectGitlabHostListenerTest extends TestCase
         ];
     }
 
-    /** @return InputInterface|ObjectProphecy */
+    /** @return ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);

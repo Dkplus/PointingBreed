@@ -24,7 +24,7 @@ final class GitlabReporterFactory implements ReporterFactory
 
     /**
      * @param array $options
-     * @return Reporter
+     * @return GitlabReporter
      * @throws NoReporterFoundException on missing options
      */
     public function authenticate(array $options)
