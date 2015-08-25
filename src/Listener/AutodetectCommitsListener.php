@@ -15,10 +15,10 @@ final class AutodetectCommitsListener
 {
     public function __invoke(AutodetectInputEvent $event)
     {
-        if (getenv('CI_BUILD_REF') && ! $event->getInput()->hasOption(CommitOption::NAME)) {
+        if (getenv('CI_BUILD_REF') && $event->getInput()->getOption(CommitOption::NAME) === null) {
             $event->getInput()->setOption(CommitOption::NAME, getenv('CI_BUILD_REF'));
         }
-        if (getenv('CI_BUILD_BEFORE_SHA') && ! $event->getInput()->hasOption(CommitBeforeOption::NAME)) {
+        if (getenv('CI_BUILD_BEFORE_SHA') && $event->getInput()->getOption(CommitBeforeOption::NAME) === null) {
             $event->getInput()->setOption(CommitBeforeOption::NAME, getenv('CI_BUILD_BEFORE_SHA'));
         }
     }

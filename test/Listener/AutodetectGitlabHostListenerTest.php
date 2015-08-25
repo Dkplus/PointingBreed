@@ -4,10 +4,8 @@ namespace PointingBreedTest\Listener;
 use PHPUnit_Framework_TestCase as TestCase;
 use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabHostOption;
-use PointingBreed\GlobalOptions;
 use PointingBreed\Listener\AutodetectGitlabHostListener;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -42,7 +40,7 @@ class AutodetectGitlabHostListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=' . $repositoryUrl);
-        $input->hasOption(GitlabHostOption::NAME)->willReturn(false);
+        $input->getOption(GitlabHostOption::NAME)->willReturn(null);
         $input->setOption(GitlabHostOption::NAME, $expectedApiUrl)->shouldBeCalled();
 
         $listener = new AutodetectGitlabHostListener();
@@ -69,7 +67,7 @@ class AutodetectGitlabHostListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=https://gitlab-ci-token:068c84957409ba00e4a52315e6ccf6@gitlab.foo.net/foo/bar.git');
-        $input->hasOption(GitlabHostOption::NAME)->willReturn(true);
+        $input->getOption(GitlabHostOption::NAME)->willReturn('https://gitlab.bar.net/api/v3/');
         $input->setOption(GitlabHostOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabHostListener();
@@ -88,7 +86,7 @@ class AutodetectGitlabHostListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=' . $invalidUrl);
-        $input->hasOption(GitlabHostOption::NAME)->willReturn(false);
+        $input->getOption(GitlabHostOption::NAME)->willReturn(null);
         $input->setOption()->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabHostListener();
@@ -105,7 +103,6 @@ class AutodetectGitlabHostListenerTest extends TestCase
         ];
     }
 
-    /** @return ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);

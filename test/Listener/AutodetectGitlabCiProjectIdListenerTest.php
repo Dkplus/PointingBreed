@@ -6,7 +6,6 @@ use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabCiProjectIdOption;
 use PointingBreed\Listener\AutodetectGitlabCiProjectIdListener;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -35,7 +34,7 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_PROJECT_ID=' . $id);
-        $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(false);
+        $input->getOption(GitlabCiProjectIdOption::NAME)->willReturn(null);
         $input->setOption(GitlabCiProjectIdOption::NAME, $id)->shouldBeCalled();
 
         $listener = new AutodetectGitlabCiProjectIdListener();
@@ -47,7 +46,7 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $input = $this->anInput();
         $event = new AutodetectInputEvent($input->reveal());
 
-        $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(false);
+        $input->getOption(GitlabCiProjectIdOption::NAME)->willReturn(null);
         $input->setOption(GitlabCiProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabCiProjectIdListener();
@@ -60,14 +59,13 @@ class AutodetectGitlabCiProjectIdListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_PROJECT_ID=5');
-        $input->hasOption(GitlabCiProjectIdOption::NAME)->willReturn(true);
+        $input->getOption(GitlabCiProjectIdOption::NAME)->willReturn('6');
         $input->setOption(GitlabCiProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabCiProjectIdListener();
         $listener($event);
     }
 
-    /** @return ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);

@@ -6,7 +6,6 @@ use PointingBreed\Console\AutodetectInputEvent;
 use PointingBreed\Console\GitlabProjectIdOption;
 use PointingBreed\Listener\AutodetectGitlabProjectIdListener;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -41,7 +40,7 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=' . $repositoryUrl);
-        $input->hasOption(GitlabProjectIdOption::NAME)->willReturn(false);
+        $input->getOption(GitlabProjectIdOption::NAME)->willReturn(null);
         $input->setOption(GitlabProjectIdOption::NAME, $expectedProjectId)->shouldBeCalled();
 
         $listener = new AutodetectGitlabProjectIdListener();
@@ -68,7 +67,7 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=https://gitlab-ci-token:068c84957409ba00e4a52315e6ccf6@gitlab.foo.net/foo/bar.git');
-        $input->hasOption(GitlabProjectIdOption::NAME)->willReturn(true);
+        $input->getOption(GitlabProjectIdOption::NAME)->willReturn('bar/baz');
         $input->setOption(GitlabProjectIdOption::NAME, Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabProjectIdListener();
@@ -87,7 +86,7 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REPO=' . $invalidUrl);
-        $input->hasOption(GitlabProjectIdOption::NAME)->willReturn(false);
+        $input->getOption(GitlabProjectIdOption::NAME)->willReturn(null);
         $input->setOption()->shouldNotBeCalled();
 
         $listener = new AutodetectGitlabProjectIdListener();
@@ -104,7 +103,6 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         ];
     }
 
-    /** @return ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);

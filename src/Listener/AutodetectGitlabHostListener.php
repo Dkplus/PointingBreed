@@ -11,7 +11,7 @@ final class AutodetectGitlabHostListener
 {
     public function __invoke(AutodetectInputEvent $event)
     {
-        if ($event->getInput()->hasOption(GitlabHostOption::NAME)) {
+        if ($event->getInput()->getOption(GitlabHostOption::NAME) !== null) {
             return;
         }
         if (! getenv('CI_BUILD_REPO')) {

@@ -7,7 +7,6 @@ use PointingBreed\Console\CommitBeforeOption;
 use PointingBreed\Console\CommitOption;
 use PointingBreed\Listener\AutodetectCommitsListener;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -42,7 +41,7 @@ class AutodetectCommitsListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REF=' . $sha);
-        $input->hasOption(CommitOption::NAME)->willReturn(false);
+        $input->getOption(CommitOption::NAME)->willReturn(null);
         $input->setOption(CommitOption::NAME, $sha)->shouldBeCalled();
 
         $listener = new AutodetectCommitsListener();
@@ -55,7 +54,7 @@ class AutodetectCommitsListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_REF=ab6a30e08f5932f04f16a1c5be564118a66b730e');
-        $input->hasOption(CommitOption::NAME)->willReturn(true);
+        $input->getOption(CommitOption::NAME)->willReturn('bc3a30e08f5932f04f16a1c5be564118a66b730e');
         $input->setOption(Argument::any(), Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectCommitsListener();
@@ -69,7 +68,7 @@ class AutodetectCommitsListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_BEFORE_SHA=' . $sha);
-        $input->hasOption(CommitBeforeOption::NAME)->willReturn(false);
+        $input->getOption(CommitBeforeOption::NAME)->willReturn(null);
         $input->setOption(CommitBeforeOption::NAME, $sha)->shouldBeCalled();
 
         $listener = new AutodetectCommitsListener();
@@ -82,14 +81,13 @@ class AutodetectCommitsListenerTest extends TestCase
         $event = new AutodetectInputEvent($input->reveal());
 
         putenv('CI_BUILD_BEFORE_SHA=ab6a30e08f5932f04f16a1c5be564118a66b730e');
-        $input->hasOption(CommitBeforeOption::NAME)->willReturn(true);
+        $input->getOption(CommitBeforeOption::NAME)->willReturn('c8da30e08f5932f04f16a1c5be564118a66b730e');
         $input->setOption(Argument::any(), Argument::any())->shouldNotBeCalled();
 
         $listener = new AutodetectCommitsListener();
         $listener($event);
     }
 
-    /** @return ObjectProphecy */
     private function anInput()
     {
         return $this->prophesize(InputInterface::class);

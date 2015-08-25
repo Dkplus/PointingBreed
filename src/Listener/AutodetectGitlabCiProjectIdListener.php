@@ -11,7 +11,7 @@ final class AutodetectGitlabCiProjectIdListener
 {
     public function __invoke(AutodetectInputEvent $event)
     {
-        if ($event->getInput()->hasOption(GitlabCiProjectIdOption::NAME)) {
+        if ($event->getInput()->getOption(GitlabCiProjectIdOption::NAME) !== null) {
             return;
         }
         if (! getenv('CI_PROJECT_ID')) {

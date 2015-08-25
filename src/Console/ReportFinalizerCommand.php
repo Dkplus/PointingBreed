@@ -49,7 +49,7 @@ class ReportFinalizerCommand extends Command
 
         $severities = ['error' => Severity::error(), 'warning' => Severity::warning()];
         $severity   = Severity::notice();
-        if ($input->hasOption('severity') && isset($severities[$input->getOption('severity')])) {
+        if ($input->getOption('severity') !== null && isset($severities[$input->getOption('severity')])) {
             $severity = $severities[$input->getOption('severity')];
         }
 
