@@ -28,6 +28,6 @@ final class AutodetectGitlabProjectIdListener
 
         $namespace = $matches[1];
         $project   = $matches[2];
-        $event->getInput()->setOption(GitlabProjectIdOption::NAME, $namespace . '%2F' . $project);
+        $event->getInput()->setOption(GitlabProjectIdOption::NAME, $namespace . '/' . $project);
     }
 }

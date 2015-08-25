@@ -52,11 +52,11 @@ class AutodetectGitlabProjectIdListenerTest extends TestCase
         return [
             [
                 'https://gitlab-ci-token:068c84957409ba00e4a52315e6ccf6@gitlab.foo.net/foo/bar.git',
-                'foo%2Fbar'
+                'foo/bar'
             ],
             [
                 'http://gitlab-ci-token:068c849374098a00e0a523b5e6ccf6@gitlab.com/baz/foo.git',
-                'baz%2Ffoo'
+                'baz/foo'
             ],
         ];
     }
