@@ -34,24 +34,24 @@ class EmojiFormatTest extends TestCase
         );
     }
 
-    public function testItShouldPrependAHighVoltageToAnError()
+    public function testItShouldPrependAZapToAnError()
     {
         $severity  = Severity::error();
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':high_voltage_sign: ',
+            ':zap: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
 
-    public function testItShouldPrependAWhiteUpPointingIndexToAWarning()
+    public function testItShouldPrependAWarningToAWarning()
     {
         $severity  = Severity::warning();
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':white_up_pointing_index: ',
+            ':warning: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
@@ -67,68 +67,68 @@ class EmojiFormatTest extends TestCase
         );
     }
 
-    public function testItShouldPrependAPukeFingerToAProgressZero()
+    public function testItShouldPrependARageToAProgressZero()
     {
         $severity  = Severity::progress(0);
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':puke_finger: ',
+            ':rage: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
 
-    public function testItShouldPrependAFaceWithNoGoodGestureToAProgressOne()
+    public function testItShouldPrependAnAngryToAProgressOne()
     {
         $severity  = Severity::progress(1);
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':face_with_no_good_gesture: ',
+            ':angry: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
 
-    public function testItShouldPrependAPersonWithPoutingFaceToAProgressTwo()
+    public function testItShouldPrependAWorriedToAProgressTwo()
     {
         $severity  = Severity::progress(2);
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':person_with_pouting_face: ',
+            ':worried: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
 
-    public function testItShouldPrependAPersonFrowningToAProgressThree()
+    public function testItShouldPrependAConfusedToAProgressThree()
     {
         $severity  = Severity::progress(3);
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':person_frowning: ',
+            ':confused: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
 
-    public function testItShouldPrependAFaceWithOkGestureToAProgressFour()
+    public function testItShouldPrependABlushToAProgressFour()
     {
         $severity  = Severity::progress(4);
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':face_with_ok_gesture: ',
+            ':blush: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }
 
-    public function testItShouldPrependAHappyPersonRaisingOneHandToAProgressFive()
+    public function testItShouldPrependASmileToAProgressFive()
     {
         $severity  = Severity::progress(5);
         $underTest = new EmojiFormat();
 
         $this->assertStringStartsWith(
-            ':happy_person_raising_one_hand: ',
+            ':smile: ',
             $underTest->apply(Report::forCommit('abc', $severity))
         );
     }

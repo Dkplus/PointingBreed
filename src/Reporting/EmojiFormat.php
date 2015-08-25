@@ -17,15 +17,15 @@ final class EmojiFormat implements Format
             ' :-1:' => $severity->isGettingWorse(),
         ];
         $prefixes = [
-            ':speech_balloon: '                => $severity->isNotice(),
-            ':white_up_pointing_index: '       => $severity->isWarning(),
-            ':high_voltage_sign: '             => $severity->isError(),
-            ':puke_finger: '                   => $severity->toProgress() === 0,
-            ':face_with_no_good_gesture: '     => $severity->toProgress() === 1,
-            ':person_with_pouting_face: '      => $severity->toProgress() === 2,
-            ':person_frowning: '               => $severity->toProgress() === 3,
-            ':face_with_ok_gesture: '          => $severity->toProgress() === 4,
-            ':happy_person_raising_one_hand: ' => $severity->toProgress() === 5,
+            ':speech_balloon: ' => $severity->isNotice(),
+            ':warning: '        => $severity->isWarning(),
+            ':zap: '            => $severity->isError(),
+            ':rage: '           => $severity->toProgress() === 0,
+            ':angry: '          => $severity->toProgress() === 1,
+            ':worried: '        => $severity->toProgress() === 2,
+            ':confused: '       => $severity->toProgress() === 3,
+            ':blush: '          => $severity->toProgress() === 4,
+            ':smile: '          => $severity->toProgress() === 5,
         ];
 
         foreach ($suffixes as $eachEmoji => $apply) {
