@@ -30,6 +30,7 @@ $events->addListener(Console\AutodetectInputEvent::NAME, new Listener\Autodetect
 $events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectCommitsListener());
 $events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabProjectIdListener());
 $events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabCiProjectIdListener());
+$events->addListener(Console\AutodetectInputEvent::NAME, new Listener\AutodetectGitlabPrivateTokenListener());
 
 $git       = new Git\SebastianGit();
 $reporters = new Gitlab\GitlabReporterFactory(new Reporting\DefaultFormatFactory(new Reporting\EmojiFormat()));
